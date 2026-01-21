@@ -20,11 +20,13 @@
         table { width:100%; border-collapse:collapse; margin-top:10px; }
         th, td { border:2px solid var(--border); padding:8px; text-align:left; font-size: 14px; }
         th { background: var(--soft); }
+        .star-col {font-weight:1200; text-align:center; color:gold;}
         .muted { color:var(--muted); }
-        .star { font-weight:900; }
-        .btn { border:2px solid var(--border); padding:8px 12px; background:#fff; cursor:pointer; text-decoration:none; color:#000; }
+        .btn { border:2px solid var(--border); padding:6px 10px; background:#fff; cursor:pointer; text-decoration:none; color:#000; }
         .btn.primary { font-weight:700; }
         .nowrap { white-space:nowrap; }
+        th.actions-col {display:none}
+        td.actions {border: none;}
         @media (max-width: 720px) {
             th, td { font-size: 12px; }
             .nowrap { white-space:normal; }
@@ -83,8 +85,8 @@
             <th>Watts</th>
             <th>Intervals</th>
             <th>Notes</th>
-            <th class="nowrap">★</th>
-            <th class="nowrap">Actions</th>
+            <th class="star-col">★</th>
+            <th class="actions-col">Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -103,10 +105,9 @@
             <td th:text="${w.interval ? 'Yes' : 'No'}"></td>
 
             <td th:text="${w.notes}"></td>
+            <td class="nowrap star-col" th:text="${w.favorite ? '★' : ''}"></td>
 
-            <td class="star" th:text="${w.favorite ? '★' : ''}"></td>
-
-            <td class="nowrap">
+            <td class="actions nowrap">
                 <a class="btn" th:href="@{'/workouts/edit/' + ${w.id}}">Edit</a>
                 <a class="btn" th:href="@{'/workouts/delete/' + ${w.id}}"
                    onclick="return confirm('Delete this workout?');">Delete</a>
@@ -117,3 +118,4 @@
 </div>
 </body>
 </html>
+
