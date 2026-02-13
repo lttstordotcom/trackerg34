@@ -32,6 +32,7 @@ public class WorkoutService {
 
     public void createFromForm(WorkoutForm form) {
         createFromFormForUser(null, form);
+
     }
 
     public Workout getWorkout(int id) {
@@ -66,7 +67,7 @@ public class WorkoutService {
         reloadFromFiles();
 
         Workout w = formToWorkout(form);
-
+				w.setUsername("test");
         if (username != null && !username.isBlank()) {
             w.setUsername(username);
         }
