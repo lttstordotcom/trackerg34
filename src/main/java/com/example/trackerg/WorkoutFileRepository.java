@@ -18,7 +18,7 @@ public class WorkoutFileRepository {
         try {
             if (!Files.exists(Path.of(WORKOUTS_FILE))) {
                 Files.writeString(Path.of(WORKOUTS_FILE),
-                        "id,date,interval,favorite,distanceMeters,timeSeconds,splitSeconds,watts,strokeRate,notes\n");
+                        "id,username,date,interval,favorite,distanceMeters,timeSeconds,splitSeconds,watts,strokeRate,notes\n");
             }
             if (!Files.exists(Path.of(INTERVALS_FILE))) {
                 Files.writeString(Path.of(INTERVALS_FILE),
@@ -37,15 +37,16 @@ public class WorkoutFileRepository {
                 String[] p = line.split(",", -1);
                 Workout w = new Workout();
                 w.setId(Integer.parseInt(p[0]));
-                w.setDate(LocalDate.parse(p[1]));
-                w.setInterval(Boolean.parseBoolean(p[2]));
-                w.setFavorite(Boolean.parseBoolean(p[3]));
-                w.setDistanceMeters(Integer.parseInt(p[4]));
-                w.setTimeSeconds(Integer.parseInt(p[5]));
-                w.setSplitSeconds(Double.parseDouble(p[6]));
-                w.setWatts(Double.parseDouble(p[7]));
-                w.setStrokeRate(Integer.parseInt(p[8]));
-                w.setNotes(unescape(p[9]));
+                w.setUsername(p[1]);
+                w.setDate(LocalDate.parse(p[2]));
+                w.setInterval(Boolean.parseBoolean(p[3]));
+                w.setFavorite(Boolean.parseBoolean(p[4]));
+                w.setDistanceMeters(Integer.parseInt(p[5]));
+                w.setTimeSeconds(Integer.parseInt(p[6]));
+                w.setSplitSeconds(Double.parseDouble(p[7]));
+                w.setWatts(Double.parseDouble(p[8]));
+                w.setStrokeRate(Integer.parseInt(p[9]));
+                w.setNotes(unescape(p[10]));
                 list.add(w);
             }
         } catch (FileNotFoundException e) {
@@ -58,11 +59,12 @@ public class WorkoutFileRepository {
 
     public void saveWorkouts(List<Workout> workouts) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(WORKOUTS_FILE))) {
-            pw.println("id,date,interval,favorite,distanceMeters,timeSeconds,splitSeconds,watts,strokeRate,notes");
+            pw.println("id,username,date,interval,favorite,distanceMeters,timeSeconds,splitSeconds,watts,strokeRate,notes");
             for (Workout w : workouts) {
                 pw.printf(
-                        "%d,%s,%b,%b,%d,%d,%.2f,%.2f,%d,%s%n",
+                        "%d,%s,%s,%b,%b,%d,%d,%.2f,%.2f,%d,%s%n",
                         w.getId(),
+                        w.getUsername() == null ? "" : w.getUsername(),
                         w.getDate(),
                         w.isInterval(),
                         w.isFavorite(),
@@ -121,7 +123,6 @@ public class WorkoutFileRepository {
 
     private String escape(String s) {
         if (s == null) return "";
-        // Replace commas so CSV stays safe
         return s.replace("\n", "\\n").replace(",", ";");
     }
 
