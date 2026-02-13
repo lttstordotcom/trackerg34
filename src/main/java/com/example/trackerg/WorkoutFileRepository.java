@@ -1,11 +1,14 @@
 package com.example.trackerg;
 
+import org.springframework.stereotype.Repository;
+
 import java.io.*;
 import java.nio.file.*;
 import java.time.LocalDate;
 import java.util.*;
 
-public class WorkoutFileRepository {
+@Repository
+public class WorkoutFileRepository {public class WorkoutFileRepository {
 
     private static final String WORKOUTS_FILE = "workouts.csv";
     private static final String INTERVALS_FILE = "intervals.csv";
