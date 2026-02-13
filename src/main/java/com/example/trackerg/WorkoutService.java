@@ -138,17 +138,20 @@ public class WorkoutService {
             if (in.getWorkoutId() != id) kept.add(in);
         }
         intervals = kept;
+		
+		if (form.getIntervals() != null) {
+    		int idx = 0;
+    		for (IntervalForm inf : form.getIntervals()) {
+        		if (inf == null) continue;
 
-        if (form.getIntervals() != null) {
-            int idx = 0;
-            for (Interval in : form.getIntervals()) {
-                if (in == null) continue;
-                in.setWorkoutId(id);
-                in.setIndex(idx++);
-                intervals.add(in);
-            }
-        }
+        			Interval in = intervalFromForm(inf);
+        			in.setWorkoutId(nextId);
+        			in.setIndex(idx++);
 
+        			intervals.add(in);
+    			}
+			}		
+		}
         saveToFiles();
     }
 
