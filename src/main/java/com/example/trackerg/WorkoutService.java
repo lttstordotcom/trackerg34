@@ -79,15 +79,18 @@ public class WorkoutService {
 
         workouts.add(w);
 
-        if (form.getIntervals() != null) {
-            int idx = 0;
-            for (Interval in : form.getIntervals()) {
-                if (in == null) continue;
-                in.setWorkoutId(nextId);
-                in.setIndex(idx++);
-                intervals.add(in);
-            }
-        }
+		if (form.getIntervals() != null) {
+    		int idx = 0;
+    		for (IntervalForm inf : form.getIntervals()) {
+        		if (inf == null) continue; 
+
+        			Interval in = intervalFromForm(inf);
+        			in.setWorkoutId(nextId);
+        			in.setIndex(idx++);
+
+        			intervals.add(in);
+			}		
+		}
 
         saveToFiles();
     }
@@ -142,15 +145,14 @@ public class WorkoutService {
 		if (form.getIntervals() != null) {
     		int idx = 0;
     		for (IntervalForm inf : form.getIntervals()) {
-        		if (inf == null) continue;
+        			if (inf == null) continue;
 
-        			Interval in = intervalFromForm(inf);
-        			in.setWorkoutId(nextId);
-        			in.setIndex(idx++);
+        				Interval in = intervalFromForm(inf);
+        				in.setWorkoutId(id);
+        				in.setIndex(idx++);
 
-        			intervals.add(in);
-    			}
-			}		
+        				intervals.add(in);
+    		}
 		}
         saveToFiles();
     }
@@ -301,4 +303,17 @@ public class WorkoutService {
 
         return w;
     }
+	private Interval intervalFromForm(IntervalForm inf) {
+    Interval in = new Interval();
+
+    in.setWorkDistanceMeters(inf.getWorkDistanceMeters());
+
+    int workSeconds = inf.getWorkMin() * 60 + inf.getWorkSec();
+    in.setWorkSeconds(workSeconds);
+
+    int restSeconds = inf.getRestMin() * 60 + inf.getRestSec();
+    in.setRestSeconds(restSeconds);
+
+    return in;
+}
 }
