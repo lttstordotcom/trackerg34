@@ -26,9 +26,9 @@ public class WorkoutService {
         repo.saveIntervals(intervals);
     }
 
-    public List<Workout> listWorkouts(String query, String sortKey, String sort) {
-        return listWorkoutsForUser(null, query, sortKey, sort);
-    }
+	public List<Workout> listWorkouts(String query, String sortKey, String sort) {
+    	return listWorkoutsForUser(null, query, sortKey, sort);
+	}
 
     public void createFromForm(WorkoutForm form) {
         createFromFormForUser(null, form);
