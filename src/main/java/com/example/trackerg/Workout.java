@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 public class Workout {
     private int id;
+    private String username;
     private LocalDate date;
 
     private boolean interval;
@@ -50,4 +51,6 @@ public class Workout {
 
     public String getNotes() { return notes; }
     public void setNotes(String notes) { this.notes = notes; }
+	public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
 }
