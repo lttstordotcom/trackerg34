@@ -21,9 +21,11 @@ public class Workout {
 
     public Workout() {}
 
-    // gets and sets
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
+
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
 
     public LocalDate getDate() { return date; }
     public void setDate(LocalDate date) { this.date = date; }
@@ -51,6 +53,4 @@ public class Workout {
 
     public String getNotes() { return notes; }
     public void setNotes(String notes) { this.notes = notes; }
-	public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
 }
