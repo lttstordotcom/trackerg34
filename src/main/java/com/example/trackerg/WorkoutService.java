@@ -291,7 +291,7 @@ public class WorkoutService {
         w.setStrokeRate(form.getStrokeRate());
         w.setNotes(form.getNotes());
         w.setFavorite(form.isFavorite());
-        w.setIntervalWorkout(form.isIntervalWorkout());
+        w.setInterval(form.isIntervalWorkout());
 
         if (w.getDistanceMeters() > 0 && w.getTimeSeconds() > 0) {
             double splitSeconds = (w.getTimeSeconds() * 500.0) / w.getDistanceMeters();
@@ -304,16 +304,16 @@ public class WorkoutService {
 
         return w;
     }
-	private Interval intervalFromForm(IntervalForm inf) {
+private Interval intervalFromForm(IntervalForm inf) {
     Interval in = new Interval();
 
     in.setWorkDistanceMeters(inf.getWorkDistanceMeters());
 
     int workSeconds = inf.getWorkMin() * 60 + inf.getWorkSec();
-    in.setWorkSeconds(workSeconds);
+    in.setWorkTimeSeconds(workSeconds);
 
     int restSeconds = inf.getRestMin() * 60 + inf.getRestSec();
-    in.setRestSeconds(restSeconds);
+    in.setRestTimeSeconds(restSeconds);
 
     return in;
 }
