@@ -1,5 +1,6 @@
 package com.example.trackerg;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,38 +22,44 @@ public class WorkoutController {
         return "redirect:/workouts";
     }
 
-    //View Workouts
     @GetMapping("/workouts")
-    public String workouts(
-            @RequestParam(value = "query", required = false) String query,
-            @RequestParam(value = "sort", required = false) String sort,
-            Model model
-    ) {
-        model.addAttribute("workouts", service.listWorkouts(query, sort));
+    public String workouts(@RequestParam(value="query", required=false) String query,
+                           @RequestParam(value="sort", required=false) String sort,
+                           Model model,
+                           HttpSession session) {
+
+        String username = (String) session.getAttribute("username");
+        if (username == null) return "redirect:/login";
+
+        model.addAttribute("workouts", service.listWorkouts(query, sort, null, null));
         model.addAttribute("query", query == null ? "" : query);
         model.addAttribute("sort", sort == null ? "" : sort);
+        model.addAttribute("username", username);
         return "workouts";
     }
 
-    //Add Workout
     @GetMapping("/workouts/new")
     public String newWorkout(Model model) {
         WorkoutForm form = new WorkoutForm();
-        // Start with 1 interval row so the UI has something to show when toggled
         model.addAttribute("form", form);
         model.addAttribute("mode", "create");
         return "workout_form";
     }
 
     @PostMapping("/workouts")
-    public String create(@ModelAttribute("form") WorkoutForm form) {
-        service.createFromForm(form);
+    public String create(@ModelAttribute("form") WorkoutForm form, HttpSession session) {
+        String username = (String) session.getAttribute("username");
+        if (username == null) return "redirect:/login";
+
+        service.createFromForm(username, form);
         return "redirect:/workouts";
     }
 
-    //Edit Workout
     @GetMapping("/workouts/edit/{id}")
-    public String edit(@PathVariable int id, Model model) {
+    public String edit(@PathVariable int id, Model model, HttpSession session) {
+        String username = (String) session.getAttribute("username");
+        if (username == null) return "redirect:/login";
+
         Workout w = service.getWorkout(id);
         List<Interval> intervalRows = service.getIntervalsForWorkout(id);
 
@@ -65,12 +72,10 @@ public class WorkoutController {
         form.setStrokeRate(w.getStrokeRate());
         form.setNotes(w.getNotes());
 
-        // Convert total time into minutes + seconds
         int total = w.getTimeSeconds();
         form.setTimeMinutes(total / 60);
         form.setTimeSeconds(total % 60);
 
-        // If interval workout show existing interval rows (ELIOT REMEMBER THIS IS JS IF YOU MESS WITH IT GOOGLE STUFF FIRST BECAUSE YOU HAVE NO IDEA HOW TO RIGHT JS)
         model.addAttribute("intervalData", intervalRows);
         model.addAttribute("form", form);
         model.addAttribute("mode", "edit");
@@ -78,21 +83,29 @@ public class WorkoutController {
     }
 
     @PostMapping("/workouts/update")
-    public String update(@ModelAttribute("form") WorkoutForm form) {
-        service.updateFromForm(form);
+    public String update(@ModelAttribute("form") WorkoutForm form, HttpSession session) {
+        String username = (String) session.getAttribute("username");
+        if (username == null) return "redirect:/login";
+
+        service.updateFromForm(username, form);
         return "redirect:/workouts";
     }
 
     @GetMapping("/workouts/delete/{id}")
-    public String delete(@PathVariable int id) {
-        service.deleteWorkout(id);
+    public String delete(@PathVariable int id, HttpSession session) {
+        String username = (String) session.getAttribute("username");
+        if (username == null) return "redirect:/login";
+
+        service.deleteWorkout(username, id);
         return "redirect:/workouts";
     }
 
-    //View PR
     @GetMapping("/prs")
-    public String prs(Model model) {
-        Map<String, Workout> best = service.bestPRs();
+    public String prs(Model model, HttpSession session) {
+        String username = (String) session.getAttribute("username");
+        if (username == null) return "redirect:/login";
+
+        Map<String, Workout> best = service.bestPRs(username);
         model.addAttribute("best", best);
         return "prs";
     }
